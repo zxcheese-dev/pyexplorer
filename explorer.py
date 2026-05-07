@@ -13,7 +13,7 @@ def script():
             print(f"[FILE] {item}")
 
 def reset():
-    os.system("cls")
+    os.system("cls" if os.name == "nt" else "clear")
     script()
 
 if __name__ == "__main__":
