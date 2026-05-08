@@ -1,8 +1,14 @@
 import os
 import shutil
+import pathlib
+
+commands = ["chdir (chdir (path))", "new (new (file / dir) (file / dir name) (file content*))", "del (del (file / dir name))", "rdfile (rdfile (file name))", "chfile (chfile (file name) (new file content))", "move (move (file name) (path))", "walk (walk (path))"]
 
 def script():
     path_dir = os.getcwd()
+
+    print(path_dir)
+    print("Type 'help' for help\n")
 
     for item in os.listdir(path_dir):
         full_path = os.path.join(path_dir, item)
@@ -13,10 +19,11 @@ def script():
             print(f"[FILE] {item}")
 
 def reset():
-    os.system("cls" if os.name == "nt" else "clear")
+    os.system("cls")
     script()
 
 if __name__ == "__main__":
+    os.chdir(pathlib.Path.home())
     reset()
     while True:
         cmd = input("> ").split()
@@ -24,11 +31,18 @@ if __name__ == "__main__":
         if not cmd:
             continue
 
-        if cmd[0] == "chdir":
+        if cmd[0] == "chdir" or cmd[0] == "del" or cmd[0] == "rdfile" or cmd[0] == "walk":
             if len(cmd) < 2:
-                print("chdir: Missing argument")
+                print(f"{cmd[0]}: Missing argument")
+                continue
+        
+        elif cmd[0] == "new" or cmd[0] == "chfile" or cmd[0] == "move":
+            if len(cmd) < 3:
+                print(f"{cmd[0]}: Missing argument")
                 continue
 
+
+        if cmd[0] == "chdir":
             try:
                 os.chdir(cmd[1])
             except (FileNotFoundError):
@@ -36,10 +50,6 @@ if __name__ == "__main__":
                 continue
 
         elif cmd[0] == "del":
-            if len(cmd) < 2:
-                print("del: Missing argument")
-                continue
-
             path_dir = os.getcwd()
 
             try:
@@ -54,10 +64,6 @@ if __name__ == "__main__":
                 print(f"del: Cannot find {cmd[1]}")
 
         elif cmd[0] == "new":
-            if len(cmd) < 3:
-                print("new: Missing argument")
-                continue
-
             if cmd[1] == "file":
                 if not os.path.exists(cmd[2]):
                     with open(cmd[2], 'w') as f:
@@ -75,10 +81,6 @@ if __name__ == "__main__":
                     print(f"new: Folder {cmd[2]} already exist")
 
         elif cmd[0] == "chfile":
-            if len(cmd) < 3:
-                print("chfile: Missing argument")
-                continue
-
             try:
                 with open(cmd[1], 'w') as f:
                     f.write(" ".join(cmd[2:]))
@@ -87,24 +89,16 @@ if __name__ == "__main__":
                 continue
 
         elif cmd[0] == "rdfile":
-            if len(cmd) < 2:
-                print("rdfile: Missing argument")
-                continue
-
             try:
                 with open(cmd[1], 'r') as f:
                     file = f.read()
-                print(file)
+                print(f"\n{file}")
                 input("Press Enter to continue... ")
             except (FileNotFoundError):
                 print(f"rdfile: File {cmd[1]} not found")
                 continue
         
         elif cmd[0] == "move":
-            if len(cmd) < 3:
-                print("move: Missing argument")
-                continue
-
             try:
                 shutil.move(cmd[1], cmd[2])
             except (FileNotFoundError):
@@ -112,10 +106,6 @@ if __name__ == "__main__":
                 continue
         
         elif cmd[0] == "walk":
-            if len(cmd) < 2:
-                print("dir: Missing argument")
-                continue
-
             for root, dirs, files in os.walk(cmd[1], onerror=lambda e: print(f"dir: {e}")):
                 print(f"Current: {root}")
 
@@ -124,6 +114,14 @@ if __name__ == "__main__":
                 for file_name in files:
                     print(f"[FILE] {file_name}")
                 
+            input("Press Enter to continue... ")
+        
+        elif cmd[0] == "help":
+            print("\ncommands:")
+
+            for cmnd in commands:
+                print(cmnd)
+            
             input("Press Enter to continue... ")
 
         else:
