@@ -25,7 +25,7 @@ python main.py
 
 ## Commands
 
-## Commands list
+### Commands list
 help
 
 ---
