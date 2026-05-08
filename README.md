@@ -25,6 +25,11 @@ python main.py
 
 ## Commands
 
+## Commands list
+help
+
+---
+
 ### Navigation
 chdir <path>
 
