@@ -82,8 +82,12 @@ if __name__ == "__main__":
 
         elif cmd[0] == "chfile":
             try:
-                with open(cmd[1], 'w') as f:
-                    f.write(" ".join(cmd[2:]))
+                if cmd[2] == "*":
+                    with open(cmd[1], 'w') as f:
+                        f.write("")
+                elif cmd[2] != "*":
+                    with open(cmd[1], 'w') as f:
+                        f.write(" ".join(cmd[2:]))
             except (FileNotFoundError):
                 print(f"chfile: File {cmd[1]} not found")
                 continue
