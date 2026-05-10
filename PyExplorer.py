@@ -2,7 +2,7 @@ import os
 import shutil
 import pathlib
 
-commands = ["chdir (chdir (path))", "new (new (file / dir) (file / dir name) (file content*))", "del (del (file / dir name))", "rdfile (rdfile (file name))", "chfile (chfile (file name) (new file content))", "move (move (file name) (path))", "walk (walk (path))"]
+commands = ["chdir (chdir (path))", "new (new (file / dir) (file / dir name) (file content*))", "del (del (file / dir name))", "rdfile (rdfile (file name))", "chfile (chfile (file name) (new file content))", "move (move (file name) (path))", "walk (walk (path))", "run (run (filename))"]
 
 def script():
     path_dir = os.getcwd()
@@ -31,7 +31,7 @@ if __name__ == "__main__":
         if not cmd:
             continue
 
-        if cmd[0] == "chdir" or cmd[0] == "del" or cmd[0] == "rdfile" or cmd[0] == "walk":
+        if cmd[0] == "chdir" or cmd[0] == "del" or cmd[0] == "rdfile" or cmd[0] == "walk" or cmd[0] == "run":
             if len(cmd) < 2:
                 print(f"{cmd[0]}: Missing argument")
                 continue
@@ -44,9 +44,13 @@ if __name__ == "__main__":
 
         if cmd[0] == "chdir":
             try:
-                os.chdir(cmd[1])
+                os.chdir(" ".join(cmd[1:]))
             except (FileNotFoundError):
-                print(f"chdir: Cannot find dir {cmd[1]}")
+                print(f"chdir: Cannot find dir {" ".join(cmd[1:])}")
+                continue
+
+            except (OSError):
+                print(f"chdir: Invalid argument {cmd[1]}")
                 continue
 
         elif cmd[0] == "del":
@@ -65,18 +69,16 @@ if __name__ == "__main__":
 
         elif cmd[0] == "new":
             if cmd[1] == "file":
-                if not os.path.exists(cmd[2]):
-                    with open(cmd[2], 'w') as f:
-                        if len(cmd) > 3:
-                            f.write(" ".join(cmd[3:]))
+                if not os.path.exists(" ".join(cmd[2:])):
+                    open(" ".join(cmd[2:]), 'w')
 
                 else:
-                    print(f"new: File {cmd[2]} already exist")
+                    print(f"new: File {" ".join(cmd[2:])} already exist")
                     continue
 
             elif cmd[1] == "dir":
-                if not os.path.exists(cmd[2]):
-                    os.mkdir(cmd[2])
+                if not os.path.exists(" ".join(cmd[2:])):
+                    os.mkdir(" ".join(cmd[2:]))
                 else:
                     print(f"new: Folder {cmd[2]} already exist")
 
@@ -94,12 +96,15 @@ if __name__ == "__main__":
 
         elif cmd[0] == "rdfile":
             try:
-                with open(cmd[1], 'r') as f:
+                with open(" ".join(cmd[1:]), 'r') as f:
                     file = f.read()
                 print(f"\n{file}")
-                input("Press Enter to continue... ")
+                continue
             except (FileNotFoundError):
                 print(f"rdfile: File {cmd[1]} not found")
+                continue
+            except:
+                print(f"rdfile: Cannot read {" ".join(cmd[1:])}")
                 continue
         
         elif cmd[0] == "move":
@@ -120,13 +125,20 @@ if __name__ == "__main__":
                 
             input("Press Enter to continue... ")
         
+        elif cmd[0] == "run":
+            try:
+                os.startfile(cmd[1])
+            except (FileNotFoundError):
+                print(f"run: File {cmd[1]} not found")
+                continue
+        
         elif cmd[0] == "help":
             print("\ncommands:")
 
-            for cmnd in commands:
-                print(cmnd)
+            for cmds in commands:
+                print(cmds)
             
-            input("Press Enter to continue... ")
+            continue
 
         else:
             print(f"Unknown command: {cmd[0]}")
