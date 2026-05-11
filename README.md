@@ -68,7 +68,7 @@ move <source> <destination>
 ---
 
 ### Add content
-add <file> [content]
+add
 
 ---
 
