@@ -42,7 +42,7 @@ walk <path>
 ---
 
 ### Create files / folders
-new file <filename> [content]
+new file <filename>
 new dir <dirname>
 
 ---
@@ -64,6 +64,11 @@ rdfile <file>
 
 ### Move files / folders
 move <source> <destination>
+
+---
+
+### Add content
+add <file> [content]
 
 ---
 
