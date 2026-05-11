@@ -14,6 +14,7 @@ It allows basic file system operations like navigation, file creation, deletion,
 -  Delete files and folders
 -  Move files and folders
 -  Recursive directory tree view (walk)
+-  Add new content to file
 
 ---
 
