@@ -1,4 +1,4 @@
-# pyexplorer
+# PyExplorer
 
 A lightweight command-line file manager written in Python for learning purposes.  
 It allows basic file system operations like navigation, file creation, deletion, editing, and moving.
